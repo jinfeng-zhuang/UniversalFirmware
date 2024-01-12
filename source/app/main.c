@@ -2,20 +2,52 @@
 
 #include <hal.h>
 
-volatile char *g_name = "LiuJia";
-
 int fputc(int ch, FILE *f) 
 {
   return(ITM_SendChar(ch));
 }
 
+void soc_init(void)
+{
+
+}
+
+void device_init(void)
+{
+    
+}
+
+void task_init(void)
+{
+    
+}
+
 int main(void)
 {
-  HAL_Init();
+  // It can be A9, A53, M3, M4, x86, ...
+  // It contains the CPU IPs initialize
+  cpu_init();
+
+  // It can be STM32, ZYNQ, iMX6, ...
+  soc_init();
   
-  (void)g_name;
+  // The devices connected to SoC
+  device_init();
+
+  // HAL_Init();
   
+  task_init();
+
   printf("Hello ITM %s\n", g_name);
+  
+  // handle messages
+  
+  while (1)
+  {
+    
+  }
+  
+  
   
   return 0;
 }

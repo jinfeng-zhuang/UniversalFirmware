@@ -168,11 +168,25 @@ __Vectors_Size  EQU  __Vectors_End - __Vectors
 ; Reset handler
 Reset_Handler    PROC
                  EXPORT  Reset_Handler             [WEAK]
-        IMPORT  SystemInit
         IMPORT  __main
 
-                 LDR     R0, =SystemInit
-                 BLX     R0
+                 ;_____________________________________________________________
+                 ;
+                 ; 1. Initial RAM
+                 ;
+                 ;  1.1 Copy RW & RO data to RAM, and initial the global variables
+                 ;  1.2 Reset the variables in ZI area.
+                 ;  1.3 jump to _rt_entry
+                 ;
+                 ; 2. Prepare Stack
+                 ;
+                 ;  2.1 call _rt_stackheap_init() to build stack & heap
+                 ;  2.2 call _rt_lib_init() to initial the C library
+                 ;  2.3 call main() function
+                 ;  2.4 if return from main(), call exit()
+                 ;_____________________________________________________________
+                 ;
+
                  LDR     R0, =__main
                  BX      R0
                  ENDP
