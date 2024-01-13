@@ -1,4 +1,4 @@
-#include <hal.h>
+#include <stdint.h>
 
 volatile uint32_t systick_inc = 0;
 

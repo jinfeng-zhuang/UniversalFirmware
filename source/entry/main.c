@@ -1,10 +1,32 @@
-#include <stdio.h>
+//
+// Based on HAL
+//
+// Jinfeng Zhuang, 2024.Week2
+//_____________________________________________________________________________
 
-#include <hal.h>
+
+#include <stdio.h>
 
 int fputc(int ch, FILE *f) 
 {
   return(ITM_SendChar(ch));
+}
+
+void cpu_init(void)
+{
+	// HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+
+	// HAL_InitTick(TICK_INT_PRIORITY);
+
+	// __HAL_RCC_SYSCFG_CLK_ENABLE();
+
+	// __HAL_RCC_PWR_CLK_ENABLE();
+
+	// SystemClock_Config
+		// __HAL_RCC_PWR_CLK_ENABLE();
+		// __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+		// HAL_RCC_OscConfig(HSI)
+		// HAL_RCC_ClockConfig
 }
 
 void soc_init(void)
@@ -12,7 +34,7 @@ void soc_init(void)
 
 }
 
-void device_init(void)
+void board_init(void)
 {
     
 }
@@ -26,13 +48,13 @@ int main(void)
 {
   // It can be A9, A53, M3, M4, x86, ...
   // It contains the CPU IPs initialize
-  // cpu_init
+  cpu_init();
   
   // It can be STM32, ZYNQ, iMX6, ...
-  // soc_init
+  soc_init();
   
   // The devices connected to SoC
-  // device_init
+  board_init();
   
   task_init();
 

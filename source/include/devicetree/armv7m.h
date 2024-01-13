@@ -5,27 +5,8 @@
 // Jinfeng Zhuang, 2024.Week2
 //_____________________________________________________________________________
 
-#ifndef _ARMV7M_H_
-#define _ARMV7M_H_
-
-#include <stdint.h>
-
-/* following defines should be used for structure members */
-#define     __IM     volatile const      /*! Defines 'read only' structure member permissions */
-#define     __OM     volatile            /*! Defines 'write only' structure member permissions */
-#define     __IOM    volatile            /*! Defines 'read / write' structure member permissions */
-
-#define __ISB() do {\
-                   __schedule_barrier();\
-                   __isb(0xF);\
-                   __schedule_barrier();\
-                } while (0U)
-
-#define __DSB() do {\
-                   __schedule_barrier();\
-                   __dsb(0xF);\
-                   __schedule_barrier();\
-                } while (0U)
+#ifndef _DT_ARMV7M_H_
+#define _DT_ARMV7M_H_
 
 /* Memory mapping of Core Hardware */
 #define SCS_BASE            (0xE000E000UL)                            /*!< System Control Space Base Address */

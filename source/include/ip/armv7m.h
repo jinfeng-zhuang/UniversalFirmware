@@ -1,8 +1,22 @@
-#ifndef _HAL_CORTEX_H_
-#define _HAL_CORTEX_H_
+#ifndef _IP_ARMV7M_H_
+#define _IP_ARMV7M_H_
 
-#include <soc.h>
-#include <cortex-m4.h>
+/* following defines should be used for structure members */
+#define     __IM     volatile const      /*! Defines 'read only' structure member permissions */
+#define     __OM     volatile            /*! Defines 'write only' structure member permissions */
+#define     __IOM    volatile            /*! Defines 'read / write' structure member permissions */
+
+#define __ISB() do {\
+                   __schedule_barrier();\
+                   __isb(0xF);\
+                   __schedule_barrier();\
+                } while (0U)
+
+#define __DSB() do {\
+                   __schedule_barrier();\
+                   __dsb(0xF);\
+                   __schedule_barrier();\
+                } while (0U)
 
 #define NVIC_PRIORITYGROUP_0         0x00000007U /*!< 0 bits for pre-emption priority
                                                       4 bits for subpriority */

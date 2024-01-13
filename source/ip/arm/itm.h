@@ -1,5 +1,12 @@
-#ifndef _ARMV7M_H_
-#define _ARMV7M_H_
+#ifndef _ARMV7M_ITM_H_
+#define _ARMV7M_ITM_H_
+
+#include <stdio.h>
+
+/* following defines should be used for structure members */
+#define     __IM     volatile const      /*! Defines 'read only' structure member permissions */
+#define     __OM     volatile            /*! Defines 'write only' structure member permissions */
+#define     __IOM    volatile            /*! Defines 'read / write' structure member permissions */
 
 /**
   \brief  Structure type to access the Instrumentation Trace Macrocell Register (ITM).
@@ -42,19 +49,5 @@ typedef struct
 
 #define ITM_TCR_ITMENA_Pos                  0U                                            /*!< ITM TCR: ITM Enable bit Position */
 #define ITM_TCR_ITMENA_Msk                 (1UL /*<< ITM_TCR_ITMENA_Pos*/)                /*!< ITM TCR: ITM Enable bit Mask */
-
-static __inline uint32_t ITM_SendChar (uint32_t ch)
-{
-  if (((ITM->TCR & ITM_TCR_ITMENA_Msk) != 0UL) &&      /* ITM enabled */
-      ((ITM->TER & 1UL               ) != 0UL)   )     /* ITM Port #0 enabled */
-  {
-    while (ITM->PORT[0U].u32 == 0UL)
-    {
-      __nop();
-    }
-    ITM->PORT[0U].u8 = (uint8_t)ch;
-  }
-  return (ch);
-}
 
 #endif
