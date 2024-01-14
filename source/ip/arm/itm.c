@@ -6,6 +6,7 @@
 
 #define ITM ((ITM_Type  *)ITM_BASE)
 
+#if 1
 uint32_t ITM_SendChar (uint32_t ch)
 {
   if (((ITM->TCR & ITM_TCR_ITMENA_Msk) != 0UL) &&      /* ITM enabled */
@@ -19,3 +20,4 @@ uint32_t ITM_SendChar (uint32_t ch)
   }
   return (ch);
 }
+#endif

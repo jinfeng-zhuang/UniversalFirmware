@@ -17,42 +17,84 @@
 // Board
 #include <devicetree/stm32f4_discovery.h>
 
+// ZSTACK
+#include <zstack/time.h>
+
+#if 1
 int fputc(int ch, FILE *f) 
 {
   return(ITM_SendChar(ch));
 }
+#endif
 
 void cpu_init(void)
 {
+	// SCB
 	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
-	
+
+	// Systick
 	HAL_InitTick(TICK_INT_PRIORITY);
-	
+}
+
+void flash_init(void)
+{
+#if (INSTRUCTION_CACHE_ENABLE != 0U)
+		  __HAL_FLASH_INSTRUCTION_CACHE_ENABLE();
+#endif
+			
+#if (DATA_CACHE_ENABLE != 0U)
+		  __HAL_FLASH_DATA_CACHE_ENABLE();
+#endif
+			
+#if (PREFETCH_ENABLE != 0U)
+		  __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
+#endif
+}
+
+void power_init(void)
+{
+	//_________________________________
+	// RCU: Clock: Power
+	__HAL_RCC_PWR_CLK_ENABLE();
+
+	//_________________________________
+	// configure the main internal regulator output voltage
+	// Scale1 is the default value after reset
+	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+}
+
+void clock_enable_init(void)
+{
+	//_________________________________
+	// RCU: Clock: SYSCFG
+	// 		RCC APB2 peripheral clock enable register
+	//			Bit 14: SYSCFGEN: System configuration controller clock enable
+	//			Page 289
+	//			structure: SYSCFG_TypeDef
+	//				* Memmap
+	//				* Ethernet PHY
+	//				* EXTI config
 	__HAL_RCC_SYSCFG_CLK_ENABLE();
-  	__HAL_RCC_PWR_CLK_ENABLE();
-	
-	clocktree_init(0);
 }
 
 void soc_init(void)
 {
-#if (INSTRUCTION_CACHE_ENABLE != 0U)
-	  __HAL_FLASH_INSTRUCTION_CACHE_ENABLE();
-#endif
-		
-#if (DATA_CACHE_ENABLE != 0U)
-	  __HAL_FLASH_DATA_CACHE_ENABLE();
-#endif
-		
-#if (PREFETCH_ENABLE != 0U)
-	  __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
-#endif
+	// flash clock always enabled, as code start from here
+	flash_init();
 
+	clock_enable_init();
+
+	clocktree_init(1);
+
+	power_init();
 }
 
 void board_init(void)
 {
-    
+    hal_gpio_init(LED_USER_ORANGE);
+	hal_gpio_init(LED_USER_GREEN);
+	hal_gpio_init(LED_USER_RED);
+	hal_gpio_init(LED_USER_BLUE);
 }
 
 void task_init(void)
@@ -74,24 +116,17 @@ int main(void)
   
   task_init();
   
-  hal_gpio_init(LED_USER_ORANGE);
   hal_gpio_set(LED_USER_ORANGE, 1);
-
-  hal_gpio_init(LED_USER_GREEN);
   hal_gpio_set(LED_USER_GREEN, 1);
-
-  hal_gpio_init(LED_USER_RED);
   hal_gpio_set(LED_USER_RED, 1);
-
-  hal_gpio_init(LED_USER_BLUE);
   hal_gpio_set(LED_USER_BLUE, 1);
 
-  printf("Hello ITM\n");
-  
   // handle messages
+	printf("Hello ITM\n");
   
   while (1)
   {
-    
+    //cpu_delay_us(10000);
+	  //printf("Hello ITM\n");
   }
 }
