@@ -6,15 +6,18 @@
 
 
 #include <stdio.h>
+#include <hal/gpio.h>
+#include <hal/clocktree.h>
 
 int fputc(int ch, FILE *f) 
 {
-  return(ITM_SendChar(ch));
+  //return(ITM_SendChar(ch));
+  return 0;
 }
 
 void cpu_init(void)
 {
-	// HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+	//HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
 
 	// HAL_InitTick(TICK_INT_PRIORITY);
 
@@ -26,7 +29,10 @@ void cpu_init(void)
 		// __HAL_RCC_PWR_CLK_ENABLE();
 		// __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 		// HAL_RCC_OscConfig(HSI)
-		// HAL_RCC_ClockConfig
+
+	/** Initializes the CPU, AHB and APB buses clocks
+	*/
+	clocktree_init(0);
 }
 
 void soc_init(void)
@@ -57,6 +63,10 @@ int main(void)
   board_init();
   
   task_init();
+  
+  hal_gpio_init(PD13);
+  hal_gpio_set(PD13, 1);
+  hal_gpio_set(PD13, 0);
 
   printf("Hello ITM\n");
   
@@ -66,6 +76,4 @@ int main(void)
   {
     
   }
-  
-  return 0;
 }
