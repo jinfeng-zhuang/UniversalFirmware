@@ -6,6 +6,9 @@
 
 
 #include <stdio.h>
+
+#include <stm32f4xx_hal.h>
+
 #include <hal/gpio.h>
 #include <hal/clocktree.h>
 
@@ -17,21 +20,25 @@ int fputc(int ch, FILE *f)
 
 void cpu_init(void)
 {
-	//HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
-
-	// HAL_InitTick(TICK_INT_PRIORITY);
-
-	// __HAL_RCC_SYSCFG_CLK_ENABLE();
-
-	// __HAL_RCC_PWR_CLK_ENABLE();
-
-	// SystemClock_Config
-		// __HAL_RCC_PWR_CLK_ENABLE();
-		// __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-		// HAL_RCC_OscConfig(HSI)
-
-	/** Initializes the CPU, AHB and APB buses clocks
-	*/
+#if (INSTRUCTION_CACHE_ENABLE != 0U)
+  __HAL_FLASH_INSTRUCTION_CACHE_ENABLE();
+#endif
+	
+#if (DATA_CACHE_ENABLE != 0U)
+  __HAL_FLASH_DATA_CACHE_ENABLE();
+#endif
+	
+#if (PREFETCH_ENABLE != 0U)
+  __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
+#endif
+	
+	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+	
+	HAL_InitTick(TICK_INT_PRIORITY);
+	
+	__HAL_RCC_SYSCFG_CLK_ENABLE();
+  __HAL_RCC_PWR_CLK_ENABLE();
+	
 	clocktree_init(0);
 }
 
@@ -66,7 +73,7 @@ int main(void)
   
   hal_gpio_init(PD13);
   hal_gpio_set(PD13, 1);
-  hal_gpio_set(PD13, 0);
+	hal_gpio_set(PD13, 0);
 
   printf("Hello ITM\n");
   

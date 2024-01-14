@@ -12,7 +12,7 @@
 #define GPIO_PIN(x)		((x) & 0xFF)
 
 void hal_gpio_init 			(U16 pin);
-void hal_gpio_set       	(U16 pin, U8 value);
+void hal_gpio_set       (U16 pin, U8 value);
 U8   hal_gpio_get    		(U16 pin);
 void hal_gpio_toggle		(U16 pin);
 
